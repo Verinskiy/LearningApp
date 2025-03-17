@@ -21,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
 import com.verinskij.news.data.model.Article
 import com.verinskij.news.main.model.ArticleUI
 
@@ -104,15 +108,23 @@ private fun Articles(articles: List<ArticleUI>) {
 internal fun Article(article: ArticleUI) {
     Row {
         Column {
-            article.imageUrl?.let { image ->
-                AsyncImage(
-                    model = image,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .heightIn(150.dp)
-                        .widthIn(max = 150.dp)
-                )
+            article.imageUrl?.let { imageUrl ->
+                var isImageVisible by remember { mutableStateOf(true) }
+                if (isImageVisible) {
+                    AsyncImage(
+                        model = imageUrl,
+                        onState = { state ->
+                            if( state is AsyncImagePainter.State.Error) {
+                                isImageVisible = false
+                            }
+                        },
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .heightIn(150.dp)
+                            .widthIn(max = 150.dp)
+                    )
+                }
             }
             Text(text = article.title, style = MaterialTheme.typography.headlineMedium, maxLines = 1)
             Text(text = article.description, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
