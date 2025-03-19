@@ -1,16 +1,12 @@
 package com.verinskij.news.main
 
-import android.inputmethodservice.Keyboard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -32,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
-import com.verinskij.news.data.model.Article
 import com.verinskij.news.main.model.ArticleUI
 
 @Composable
@@ -114,7 +109,7 @@ internal fun Article(article: ArticleUI) {
                     AsyncImage(
                         model = imageUrl,
                         onState = { state ->
-                            if( state is AsyncImagePainter.State.Error) {
+                            if (state is AsyncImagePainter.State.Error) {
                                 isImageVisible = false
                             }
                         },
@@ -126,8 +121,16 @@ internal fun Article(article: ArticleUI) {
                     )
                 }
             }
-            Text(text = article.title, style = MaterialTheme.typography.headlineMedium, maxLines = 1)
-            Text(text = article.description, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
+            Text(
+                text = article.title,
+                style = MaterialTheme.typography.headlineMedium,
+                maxLines = 1
+            )
+            Text(
+                text = article.description,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 3
+            )
         }
     }
 }
