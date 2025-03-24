@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.verinskij.news.uikits"
+    namespace = "com.verinskij.onboarding.page"
     compileSdk = 35
 
     defaultConfig {
@@ -25,13 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
-
     buildFeatures {
         compose = true
     }
@@ -42,16 +41,14 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.ui.tooling.preview.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    debugImplementation(libs.ui.tooling)
+    implementation(project(":features:news-main"))
+    implementation(project(":news-uikits"))
 }

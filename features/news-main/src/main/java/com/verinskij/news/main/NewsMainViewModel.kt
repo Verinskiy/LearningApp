@@ -15,7 +15,7 @@ import javax.inject.Provider
 @HiltViewModel
 internal class NewsMainViewModel @Inject constructor(
     private val getArticlesUseCase: Provider<GetArticlesUseCase>
-): ViewModel() {
+) : ViewModel() {
 
     val state: StateFlow<State> = getArticlesUseCase.get().invoke("android")
         .map { it.toState() }
@@ -30,10 +30,10 @@ internal class NewsMainViewModel @Inject constructor(
     }
 }
 
-sealed class State {
+sealed class State(open val articles: List<ArticleUI>?) {
 
-    object None: State()
-    class Loading(val articles: List<ArticleUI>? = null): State()
-    class Error(val articles: List<ArticleUI>? = null, error: kotlin.Error? = null): State()
-    class Success(val articles: List<ArticleUI>): State()
+    object None : State(null)
+    class Loading(articles: List<ArticleUI>? = null) : State(articles)
+    class Error(articles: List<ArticleUI>? = null, error: kotlin.Error? = null) : State(articles)
+    class Success(override val articles: List<ArticleUI>) : State(articles)
 }

@@ -74,7 +74,7 @@ class ArticlesRepository(
     }
 
     companion object {
-        private val TAG_LOG = "Articles repository"
+        private const val TAG_LOG = "Articles repository"
     }
 }
 

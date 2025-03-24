@@ -52,7 +52,6 @@ internal fun SourceDTO.toSource(): Source {
     )
 }
 
-
 internal fun ArticleDTO.toArticle(): Article {
     return Article(
         source = this.source.toSource(),

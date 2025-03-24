@@ -13,9 +13,12 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/database" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/detail-screen" />
             <option value="$PROJECT_DIR$/features/news-main" />
             <option value="$PROJECT_DIR$/news-api" />
+            <option value="$PROJECT_DIR$/news-common" />
             <option value="$PROJECT_DIR$/news-data" />
+            <option value="$PROJECT_DIR$/news-uikits" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

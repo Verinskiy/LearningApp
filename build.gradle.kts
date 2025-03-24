@@ -1,3 +1,4 @@
+
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
@@ -12,7 +13,7 @@ plugins {
     alias(libs.plugins.detekt) apply false
 }
 
-allprojects.onEach { project ->
+/*allprojects.onEach { project ->
     project.afterEvaluate {
         project.plugins.apply(libs.plugins.detekt.get().pluginId)
         project.extensions.configure<DetektExtension> {
@@ -20,4 +21,4 @@ allprojects.onEach { project ->
         }
         project.dependencies.add("detektPlugins", libs.detekt.formatting)
     }
-}
+}*/

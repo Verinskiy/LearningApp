@@ -1,12 +1,10 @@
 package com.verinskij.database
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.verinskij.database.model.ArticleDBO
-
 
 class NewsDatabase internal constructor(private val database: NewsRoomDatabase) {
 

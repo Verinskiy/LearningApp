@@ -30,6 +30,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -67,6 +68,8 @@ dependencies {
     ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.okhttp.logging.interceptor)
+
+    implementation(libs.androidx.navigation.compose)
 
     implementation(project(":news-data"))
     implementation(project(":news-api"))

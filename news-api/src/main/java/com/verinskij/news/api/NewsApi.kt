@@ -7,6 +7,7 @@ import com.verinskij.news.api.model.ResponseDTO
 import com.verinskij.news.api.model.SortBy
 import com.verinskij.news.api.utils.NewsApiKeyInterceptor
 import okhttp3.OkHttpClient
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
