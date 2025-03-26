@@ -36,6 +36,8 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.javax.inject)
 
     implementation(project(":database"))
     implementation(project(":news-api"))

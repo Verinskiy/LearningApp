@@ -1,5 +1,10 @@
 package com.verinskij.news.data
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.verinskij.database.NewsDatabase
 import com.verinskij.news.api.NewsApi
 import com.verinskij.news.api.model.ArticleDTO
@@ -20,13 +25,26 @@ import kotlinx.coroutines.flow.onStart
 class ArticlesRepository(
     private val database: NewsDatabase,
     private val api: NewsApi,
-    private val logger: Logger
+    private val logger: Logger,
+    private val remoteMediator: AllArticlesRemoteMediator.Factory,
 ) {
+    @OptIn(ExperimentalPagingApi::class)
+    fun getAllArticlesPaging(
+        query: String,
+        config: PagingConfig,
+    ): Flow<PagingData<Article>> {
+        val pager = Pager(
+            config = config,
+            remoteMediator = remoteMediator.create(query),
+            pagingSourceFactory = { database.articlesDao.pagingAll() }
+        )
+        return pager.flow
+            .map { pagingData -> pagingData.map { it.toArticle() } }
+    }
     fun getAll(
         query: String,
         mergeStrategy: MergeStrategy<RequestResult<List<Article>>> = RequestResponseMergeStrategy(),
     ): Flow<RequestResult<List<Article>>> {
-
         val localCacheArticles = getAllDatabase()
         val remoteArticles = getAllFromServer(query)
 
@@ -47,7 +65,7 @@ class ArticlesRepository(
 
     private fun getAllFromServer(query: String): Flow<RequestResult<List<Article>>> {
         val remoteArticles: Flow<RequestResult<List<Article>>> = flow {
-            emit(api.everything(query))
+            emit(api.everything(query = query ))
         }.map { result ->
             if (result.isSuccess) {
                 val response = result.getOrThrow()
@@ -77,4 +95,3 @@ class ArticlesRepository(
         private const val TAG_LOG = "Articles repository"
     }
 }
-

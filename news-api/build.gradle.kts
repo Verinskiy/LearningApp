@@ -15,9 +15,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.json)
     implementation(libs.retrofit.adapters.result)
+    implementation(libs.json)
+    implementation(libs.kotlinx.coroutines.core)
 
     api(libs.okhttp)
-    implementation(libs.json)
-
-    implementation(libs.kotlinx.coroutines.core)
 }

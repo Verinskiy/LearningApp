@@ -52,8 +52,9 @@ internal fun SourceDTO.toSource(): Source {
     )
 }
 
-internal fun ArticleDTO.toArticle(): Article {
+internal fun ArticleDTO.toArticle(id: Long = 0): Article {
     return Article(
+        id = id,
         source = this.source.toSource(),
         author = this.author,
         title = this.title,

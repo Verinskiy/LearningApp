@@ -17,14 +17,22 @@ import java.util.Date
 interface NewsApi {
     @GET("everything")
     suspend fun everything(
-        @Query("q") query: String? = null,
-        @Query("from") from: Date? = null,
-        @Query("to") to: Date? = null,
+        @Query("q") query: String,
         @Query("language") language: List<@JvmSuppressWildcards Language>? = null,
-        @Query("sortBy") sortBy: SortBy? = null,
-        @Query("pageSize") pageSize: Int = 3,
+        @Query("pageSize") pageSize: Int = MAX_PAGE_SIZE,
         @Query("page") page: Int = 1,
     ): Result<ResponseDTO<ArticleDTO>>
+
+    @GET("everything")
+    suspend fun searchNews(
+        @Query("q") query: String,
+        @Query("pageSize") pageSize: Int = 10,
+        @Query("page") page: Int = 1,
+    ): Result<ResponseDTO<ArticleDTO>>
+
+    companion object {
+        const val MAX_PAGE_SIZE = 100
+    }
 }
 
 fun NewsApi(
