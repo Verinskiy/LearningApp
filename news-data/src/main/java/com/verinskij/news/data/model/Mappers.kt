@@ -7,6 +7,7 @@ import com.verinskij.news.api.model.SourceDTO
 
 internal fun ArticleDBO.toArticle(): Article {
     return Article(
+        id = id,
         source = this.source.toSource(),
         author = this.author,
         title = this.title,
@@ -52,7 +53,7 @@ internal fun SourceDTO.toSource(): Source {
     )
 }
 
-internal fun ArticleDTO.toArticle(id: Long = 0): Article {
+internal fun ArticleDTO.toArticle(id: Int = 0): Article {
     return Article(
         id = id,
         source = this.source.toSource(),
