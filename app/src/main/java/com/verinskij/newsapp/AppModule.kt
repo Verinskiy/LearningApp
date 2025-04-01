@@ -1,12 +1,12 @@
 package com.verinskij.newsapp
 
 import android.content.Context
+import com.verinskij.database.ArticleDAO
 import com.verinskij.database.NewsDatabase
 import com.verinskij.news.api.NewsApi
 import com.verinskij.news.common.AndroidLogger
 import com.verinskij.news.common.AppDispatchers
 import com.verinskij.news.common.Logger
-import com.verinskij.news.data.ArticlesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,21 +42,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabaseApi(@ApplicationContext context: Context): NewsDatabase {
-        return NewsDatabase(applicationContext = context)
-    }
-
-    @Provides
-    fun provideArticlesRepository(
-        database: NewsDatabase,
-        api: NewsApi,
-        logger: Logger
-    ): ArticlesRepository {
-        return ArticlesRepository(database, api, logger)
-    }
-
-    @Provides
-    @Singleton
     fun provideAppCoroutineDispatchers(): AppDispatchers {
         return AppDispatchers()
     }
@@ -64,5 +49,25 @@ object AppModule {
     @Provides
     fun provideLogger(): Logger {
         return AndroidLogger()
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+internal object DatabaseDao {
+
+    @Provides
+    @Singleton
+    fun provideNewsDatabase(
+        @ApplicationContext context: Context
+    ): NewsDatabase {
+        return NewsDatabase(context)
+    }
+
+    @Provides
+    fun provideArticleDao(
+        database: NewsDatabase
+    ): ArticleDAO {
+        return database.articlesDao
     }
 }
