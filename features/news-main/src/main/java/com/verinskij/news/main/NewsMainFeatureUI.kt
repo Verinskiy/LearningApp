@@ -1,136 +1,69 @@
 
 package com.verinskij.news.main
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil3.compose.AsyncImage
-import coil3.compose.AsyncImagePainter
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.verinskij.news.main.model.ArticleUI
 
 @Composable
-fun NewsMainScreen() {
-    NewsMainScreen(viewModel = viewModel())
+fun NewsMainScreen(modifier: Modifier = Modifier) {
+    NewsMainScreen(modifier = modifier, viewModel = viewModel())
 }
 
 @Composable
-internal fun NewsMainScreen(viewModel: NewsMainViewModel) {
-    val state by viewModel.state.collectAsState()
-    when (val currentState = state) {
-        is State.Success -> Articles(currentState.articles)
-        is State.Error -> ArticlesWithError(currentState.articles)
-        is State.Loading -> ArticleDuringUpdate(currentState.articles)
-        State.None -> NewsEmpty()
+internal fun NewsMainScreen(modifier: Modifier, viewModel: NewsMainViewModel) {
+    val articlesItems: LazyPagingItems<ArticleUI> = viewModel.statePaging.collectAsLazyPagingItems()
+    NewsMainContent(articlesItems, modifier)
+}
+
+@Composable
+private fun NewsMainContent(
+    articlesItems: LazyPagingItems<ArticleUI>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        when (articlesItems.loadState.refresh) {
+            is LoadState.Error -> ErrorMessage()
+            is LoadState.Loading -> ProgressIndicator()
+            is LoadState.NotLoading -> ArticleList(articlesItems)
+        }
     }
 }
 
 @Composable
-fun ArticlesWithError(articles: List<ArticleUI>?) {
+internal fun ErrorMessage() {
     Column {
         Box(
             Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.error)
+                .background(Color.Yellow)
                 .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Error during update", color = Color.Cyan)
-        }
-        if (articles != null) {
-            Articles(articles)
+            Text(text = "Error during update", color = Color.Blue)
         }
     }
 }
 
 @Composable
-fun ArticleDuringUpdate(articles: List<ArticleUI>?) {
-    Column {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-        if (articles != null) {
-            Articles(articles)
-        }
-    }
-}
-
-@Composable
-fun NewsEmpty() {
-    Box(contentAlignment = Alignment.Center) {
-        Text("!!!!!!!!!!!!!!!!!! No news")
-    }
-}
-
-@Composable
-private fun Articles(articles: List<ArticleUI>) {
-    LazyColumn {
-        items(articles) { article ->
-            key(article.id) {
-                Article(article)
-            }
-        }
-    }
-}
-
-@Composable
-internal fun Article(article: ArticleUI) {
-    Row {
-        Column {
-            article.imageUrl?.let { imageUrl ->
-                var isImageVisible by remember { mutableStateOf(true) }
-                if (isImageVisible) {
-                    AsyncImage(
-                        model = imageUrl,
-                        onState = { state ->
-                            if (state is AsyncImagePainter.State.Error) {
-                                isImageVisible = false
-                            }
-                        },
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .heightIn(150.dp)
-                            .widthIn(max = 150.dp)
-                    )
-                }
-            }
-            Text(
-                text = article.title,
-                style = MaterialTheme.typography.headlineMedium,
-                maxLines = 1
-            )
-            Text(
-                text = article.description,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 3
-            )
-        }
-    }
+internal fun ProgressIndicator() {
+    CircularProgressIndicator(Modifier.padding(8.dp))
 }

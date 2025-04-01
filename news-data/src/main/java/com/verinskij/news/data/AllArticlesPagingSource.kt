@@ -43,6 +43,6 @@ class AllArticlesPagingSource(
     }
 
     private companion object {
-        var counter: Long = 1
+        var counter: Int = 1
     }
 }
