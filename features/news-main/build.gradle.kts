@@ -59,11 +59,13 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     implementation(libs.dagger.hilt.android)
+    implementation(project(":news-uikits"))
     ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
-    implementation(project(":news-data"))
+    implementation(libs.androidx.paging.compose)
 
+    implementation(project(":news-data"))
 }

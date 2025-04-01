@@ -21,12 +21,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
+import javax.inject.Inject
 
-class ArticlesRepository(
+class ArticlesRepository @Inject constructor(
     private val database: NewsDatabase,
     private val api: NewsApi,
     private val logger: Logger,
     private val remoteMediator: AllArticlesRemoteMediator.Factory,
+    private val articlesPagingSource: AllArticlesPagingSource.Factory
 ) {
     @OptIn(ExperimentalPagingApi::class)
     fun getAllArticlesPaging(
@@ -36,11 +38,29 @@ class ArticlesRepository(
         val pager = Pager(
             config = config,
             remoteMediator = remoteMediator.create(query),
-            pagingSourceFactory = { database.articlesDao.pagingAll() }
+            pagingSourceFactory = {
+                database.articlesDao.pagingAll()
+            }
         )
         return pager.flow
-            .map { pagingData -> pagingData.map { it.toArticle() } }
+            .map { pagingData ->
+                pagingData.map {
+                    it.toArticle()
+                }
+            }
     }
+
+    fun getAllArticlesPagingTest2(
+        query: String,
+        config: PagingConfig,
+    ): Flow<PagingData<Article>> {
+        val pager = Pager(
+            config = config,
+            pagingSourceFactory = { articlesPagingSource.newInstance(query) }
+        )
+        return pager.flow
+    }
+
     fun getAll(
         query: String,
         mergeStrategy: MergeStrategy<RequestResult<List<Article>>> = RequestResponseMergeStrategy(),
@@ -65,7 +85,7 @@ class ArticlesRepository(
 
     private fun getAllFromServer(query: String): Flow<RequestResult<List<Article>>> {
         val remoteArticles: Flow<RequestResult<List<Article>>> = flow {
-            emit(api.everything(query = query ))
+            emit(api.everything(query = query))
         }.map { result ->
             if (result.isSuccess) {
                 val response = result.getOrThrow()
